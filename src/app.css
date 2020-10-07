@@ -17,4 +17,91 @@
   height:100%;
   width:100%;
   overflow: hidden;
+  z-index: -1;
+}
+
+
+
+.map-search{
+  position:absolute;
+  left:10px;
+  top:10px;
+  padding:10px 10px 30px 10px;
+  box-sizing: border-box;
+  height:auto;
+  width:370px;
+  background-color: rgba(0,0,0,0);
+  transition:0.2s background-color;
+}
+.map-search.active{
+  background-color: rgba(255,255,255,1);
+}
+
+
+.map-search .search-container{
+  width:100%;
+  height:auto;
+  display:block;
+  padding:0;
+  margin:0;
+}
+.map-search .search-container input:focus{
+  outline: none;
+  border: 0 none transparent;
+}
+.map-search .search-container input{
+  width:100%;
+  height:auto;
+  line-height:1.5;
+  font-size:17px;
+  color:#000;
+  display:block;
+  padding:7px 17px;
+  margin:0;
+  outline: none;
+  border: 0 none transparent;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(75,75,75,0.7);
+}
+
+
+.cities{
+  width:100%;
+  height:auto;
+  display:block;
+  padding:0;
+  margin:0;
+  list-style: none;
+}
+
+.cities li:not(:first-child):before{
+  height:1px;
+  width:80%;
+  position:absolute;
+  left:10%;
+  top:0;
+  background-color: black;
+  display:block;content:"";
+}
+
+.cities li{
+  position:relative;
+  width:100%;
+  height:auto;
+  display:block;
+  padding:10px 25px;
+  margin:0;
+  font-size:20px;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.cities li strong{
+
+}
+.cities li span:before{
+  content: ", ";
+}
+.cities li span{
+  opacity:0.7;
 }
