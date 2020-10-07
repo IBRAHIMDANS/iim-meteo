@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
+import {GeoJSON, Map, TileLayer} from "react-leaflet";
 import Cities from "./cities";
-import {Map, TileLayer} from "react-leaflet";
 
 type State = {
     select: any|null,
@@ -26,8 +26,8 @@ class WeatherMap extends React.Component<Props, State>{
         this.cancel_search = null;
 
         this.state = {
-            lat: 2.2770205,
-            long: 48.8589507,
+            lat: 48.8589507,
+            long: 2.2770205,
             select: null,
             loading: false,
             is_focus: false,
@@ -36,18 +36,21 @@ class WeatherMap extends React.Component<Props, State>{
         }
     }
 
+    geoJSONStyle() {
+        return {
+            color: 'black',
+            weight: 1,
+            fillOpacity: 0.5,
+            fillColor: 'red',
+        }
+    }
+
     renderSelection(){
         if (!this.state.select){
             return null;
         }
 
-        if (this.state.select.geojson.type === "Point"){
-
-        }
-
-        console.log(this.state.select);
-
-        return null;
+        return <GeoJSON id="geojson" style={this.geoJSONStyle} data={this.state.select.geojson}/>;
     }
 
     render() {
@@ -59,7 +62,7 @@ class WeatherMap extends React.Component<Props, State>{
 
         return (
             <div className={"app"}>
-                <Map center={[this.state.long,this.state.lat]} zoom={19} className={"map"}>
+                <Map id="map" center={[this.state.lat,this.state.long]} zoom={5} className={"map"}>
                     <TileLayer url="https://tile.openstreetmap.bzh/br/{z}/{x}/{y}.png"/>
                     {this.renderSelection()}
                 </Map>
@@ -71,6 +74,11 @@ class WeatherMap extends React.Component<Props, State>{
                 </div>
             </div>
         )
+    }
+
+    componentDidMount() {
+        // @ts-ignore
+       // this.map = L.map("map");
     }
 
     blur(){
@@ -153,13 +161,12 @@ class WeatherMap extends React.Component<Props, State>{
     }
 
     select(information: any){
-        if (information.geojson.type === "Point"){
-            this.setState({
-                select: information,
-                long: information.geojson.coordinates[0],
-                lat: information.geojson.coordinates[1],
-            })
-        }
+        console.log(information);
+        this.setState({
+            select: information,
+            long: Number(information.lon),
+            lat: Number(information.lat),
+        })
 
         return this;
     }
