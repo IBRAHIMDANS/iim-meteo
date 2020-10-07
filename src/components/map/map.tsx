@@ -1,8 +1,12 @@
 import React from "react";
 import axios from "axios";
 import Cities from "./cities";
+import {Map, TileLayer} from "react-leaflet";
 
 type State = {
+    select: any|null,
+    lat: number,
+    long: number,
     is_focus: boolean,
     loading: boolean,
     search: string,
@@ -14,7 +18,7 @@ type Props = {
     onSelect?: (result: any) => any|Promise<any>;
 }
 
-class MapPanel extends React.Component<Props, State>{
+class WeatherMap extends React.Component<Props, State>{
     constructor(props: any) {
         super(props);
 
@@ -22,11 +26,28 @@ class MapPanel extends React.Component<Props, State>{
         this.cancel_search = null;
 
         this.state = {
+            lat: 2.2770205,
+            long: 48.8589507,
+            select: null,
             loading: false,
             is_focus: false,
             search: "",
             cities: [],
         }
+    }
+
+    renderSelection(){
+        if (!this.state.select){
+            return null;
+        }
+
+        if (this.state.select.geojson.type === "Point"){
+
+        }
+
+        console.log(this.state.select);
+
+        return null;
     }
 
     render() {
@@ -37,11 +58,17 @@ class MapPanel extends React.Component<Props, State>{
         }
 
         return (
-            <div className={classnames.join(" ")}>
-                <form className={"search-container"}>
-                    <input placeholder={"Rechercher une ville"} type={"search"} onBlur={() => this.blur()} onFocus={() => this.focus()} value={this.state.search} onChange={(evt) => this.updateSearch(evt)}/>
-                </form>
-                <Cities cities={this.state.cities}/>
+            <div className={"app"}>
+                <Map center={[this.state.long,this.state.lat]} zoom={19} className={"map"}>
+                    <TileLayer url="https://tile.openstreetmap.bzh/br/{z}/{x}/{y}.png"/>
+                    {this.renderSelection()}
+                </Map>
+                <div className={classnames.join(" ")}>
+                    <form className={"search-container"}>
+                        <input placeholder={"Rechercher une ville"} type={"search"} onBlur={() => this.blur()} onFocus={() => this.focus()} value={this.state.search} onChange={(evt) => this.updateSearch(evt)}/>
+                    </form>
+                    <Cities onSelect={(information) => this.select(information)} loading={this.state.loading} cities={this.state.cities}/>
+                </div>
             </div>
         )
     }
@@ -97,7 +124,7 @@ class MapPanel extends React.Component<Props, State>{
         })
 
         // @ts-ignore
-        const result = await axios.get("https://nominatim.openstreetmap.org/search?format=json&city="+encodeURI(evt.target.value), {
+        const result = await axios.get("https://nominatim.openstreetmap.org/search?format=json&polygon_geojson=1&city="+encodeURI(evt.target.value), {
             cancelToken: new axios.CancelToken((cancel_search) => {
                 // @ts-ignore
                 this.cancel_search = cancel_search;
@@ -124,6 +151,18 @@ class MapPanel extends React.Component<Props, State>{
 
         return this;
     }
+
+    select(information: any){
+        if (information.geojson.type === "Point"){
+            this.setState({
+                select: information,
+                long: information.geojson.coordinates[0],
+                lat: information.geojson.coordinates[1],
+            })
+        }
+
+        return this;
+    }
 }
 
-export default MapPanel;
+export default WeatherMap;

@@ -72,6 +72,11 @@
   padding:0;
   margin:0;
   list-style: none;
+  transition:0.2s opacity,0.2s filter;
+}
+.cities.loading{
+  opacity:0.7;
+  filter:blur(7px);
 }
 
 .cities li:not(:first-child):before{
