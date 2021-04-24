@@ -21,7 +21,7 @@
     "@types/react-dom": "^16.9.0",
     "@types/react-leaflet": "^2.5.2",
     "axios": "^0.20.0",
-    "husky": "^4.3.0",
+    "husky": "6.0.0",
     "leaflet": "^1.7.1",
     "prettier": "^2.1.2",
     "pretty-quick": "^3.0.2",
